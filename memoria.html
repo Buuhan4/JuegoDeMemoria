@@ -21,7 +21,7 @@
             gap: 10px;
         }
 
-        .card {
+        .carta {
             width: 100px;
             height: 100px;
             background-color: #3498db;
@@ -80,7 +80,7 @@
 
         for (let i = 0; i < imagenes.length; i++) {
             let carta = document.createElement('div');
-            carta.classList.add('card');
+            carta.classList.add('carta');
             carta.setAttribute('data-valor', imagenes[i]);
             carta.addEventListener('click', function () {
                 if (bloqueoTablero) {
