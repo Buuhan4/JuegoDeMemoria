@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Memoria Dragon Ball</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .cartitas {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            gap: 10px;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #3498db;
+            background-image: url('https://via.placeholder.com/100x100.png?text=Card+Back');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 8px;
+            user-select: none;
+            border: 2px solid #fff;
+        }
+
+        .flipped {
+            background-image: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Juego de Memoria (Parejas)</h1>
+    <div class="cartitas" id="cartitas"></div>
+
+    <script>
+        let imagenes = [
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD9XaATFSAXyeimYjsrJVAZ5GO-qHGZ5w2HA&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD9XaATFSAXyeimYjsrJVAZ5GO-qHGZ5w2HA&s',
+            'https://i.ebayimg.com/00/s/MTAzNFgxNjAw/z/zzIAAOSw2F9ixAXF/$_57.JPG?set_id=8800005007',
+            'https://i.ebayimg.com/00/s/MTAzNFgxNjAw/z/zzIAAOSw2F9ixAXF/$_57.JPG?set_id=8800005007',
+            'https://elcomercio.pe/resizer/v2/6EET3CTJKFGULGWGFUAVL6LDI4.png?auth=84cb6e3da22c2e6bdaa6eafd1c1d02b9e834412493839dc1e075615b99b9780b&width=1200&height=810&quality=90&smart=true',
+            'https://elcomercio.pe/resizer/v2/6EET3CTJKFGULGWGFUAVL6LDI4.png?auth=84cb6e3da22c2e6bdaa6eafd1c1d02b9e834412493839dc1e075615b99b9780b&width=1200&height=810&quality=90&smart=true',
+            'https://www.fayerwayer.com/resizer/v2/FXMAQRNNIJF5HKDNNDCCJOMH6A.jpg?auth=29b47660983f7b8b6640df10fe78a43f3bd48fdffce8c54b109d7d371e813bd1&width=1200&height=675&smart=true',
+            'https://www.fayerwayer.com/resizer/v2/FXMAQRNNIJF5HKDNNDCCJOMH6A.jpg?auth=29b47660983f7b8b6640df10fe78a43f3bd48fdffce8c54b109d7d371e813bd1&width=1200&height=675&smart=true',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXIuGrqnjZX3AKcgkcwfO5NRne9_AzS0jRPQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXIuGrqnjZX3AKcgkcwfO5NRne9_AzS0jRPQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIzVhnt605gJsXsHbVq0_el-Y8sPppxSQ8hQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIzVhnt605gJsXsHbVq0_el-Y8sPppxSQ8hQ&s',
+            'https://www.mundodeportivo.com/alfabeta/hero/2021/02/freezer-dragon-ball-super.jpg?width=768&aspect_ratio=16:9&format=nowebp',
+            'https://www.mundodeportivo.com/alfabeta/hero/2021/02/freezer-dragon-ball-super.jpg?width=768&aspect_ratio=16:9&format=nowebp',
+            'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f3281f16-d1f9-4af5-9605-656b35bff153/df9rkgs-ca5c5b92-939f-4e70-9f43-bc09f5532a1f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YzMjgxZjE2LWQxZjktNGFmNS05NjA1LTY1NmIzNWJmZjE1M1wvZGY5cmtncy1jYTVjNWI5Mi05MzlmLTRlNzAtOWY0My1iYzA5ZjU1MzJhMWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.rVcUNA5hTjdtuMBp8d1rYw9XTcQtmRIt7sQMrvIEVjE',
+            'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f3281f16-d1f9-4af5-9605-656b35bff153/df9rkgs-ca5c5b92-939f-4e70-9f43-bc09f5532a1f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YzMjgxZjE2LWQxZjktNGFmNS05NjA1LTY1NmIzNWJmZjE1M1wvZGY5cmtncy1jYTVjNWI5Mi05MzlmLTRlNzAtOWY0My1iYzA5ZjU1MzJhMWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.rVcUNA5hTjdtuMBp8d1rYw9XTcQtmRIt7sQMrvIEVjE'
+        ];
+
+        let cartas = [];
+        let primeraCarta = null;
+        let segundaCarta = null;
+        let bloqueoTablero = false;
+
+        for (let i = imagenes.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [imagenes[i], imagenes[j]] = [imagenes[j], imagenes[i]];
+        }
+
+        for (let i = 0; i < imagenes.length; i++) {
+            let carta = document.createElement('div');
+            carta.classList.add('card');
+            carta.setAttribute('data-valor', imagenes[i]);
+            carta.addEventListener('click', function () {
+                if (bloqueoTablero) {
+                    return;
+                }
+                if (this == primeraCarta) {
+                    return;
+                }
+
+                this.style.backgroundImage = `url(${this.getAttribute('data-valor')})`;
+                this.classList.add('flipped');
+
+                if (!primeraCarta) {
+                    primeraCarta = this;
+                } else {
+                    segundaCarta = this;
+                    bloqueoTablero = true;
+
+
+                    if (primeraCarta.getAttribute('data-valor') == segundaCarta.getAttribute('data-valor')) {
+                        primeraCarta.removeEventListener('click', arguments.callee);
+                        segundaCarta.removeEventListener('click', arguments.callee);
+                        primeraCarta = null;
+                        segundaCarta = null;
+                        bloqueoTablero = false;
+                    } else {
+                        setTimeout(() => {
+                            primeraCarta.style.backgroundImage = "url('https://via.placeholder.com/100x100.png?text=Card+Back')";
+                            segundaCarta.style.backgroundImage = "url('https://via.placeholder.com/100x100.png?text=Card+Back')";
+                            primeraCarta = null;
+                            segundaCarta = null;
+                            bloqueoTablero = false;
+                        }, 750);
+                    }
+                }
+            });
+            document.getElementById('cartitas').appendChild(carta);
+            cartas.push(carta);
+        }
+    </script>
+</body>
+
+</html>
