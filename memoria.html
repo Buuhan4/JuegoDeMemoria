@@ -25,7 +25,6 @@
             width: 100px;
             height: 100px;
             background-color: #3498db;
-            background-image: url('https://via.placeholder.com/100x100.png?text=Card+Back');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -108,8 +107,8 @@
                         bloqueoTablero = false;
                     } else {
                         setTimeout(() => {
-                            primeraCarta.style.backgroundImage = "url('https://via.placeholder.com/100x100.png?text=Card+Back')";
-                            segundaCarta.style.backgroundImage = "url('https://via.placeholder.com/100x100.png?text=Card+Back')";
+                            primeraCarta.style.backgroundImage = "";
+                            segundaCarta.style.backgroundImage = "";
                             primeraCarta = null;
                             segundaCarta = null;
                             bloqueoTablero = false;
