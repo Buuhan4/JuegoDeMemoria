@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,8 +42,7 @@
 </head>
 
 <body>
-
-    <h1>Juego de Memoria Dragon Ball</h1>
+    <h1>Juego de Memoria (Parejas)</h1>
     <div class="cartitas" id="cartitas"></div>
 
     <script>
@@ -71,6 +69,7 @@
         let primeraCarta = null;
         let segundaCarta = null;
         let bloqueoTablero = false;
+        let cartasAdivinadas = [];
 
         for (let i = imagenes.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
@@ -81,8 +80,10 @@
             let carta = document.createElement('div');
             carta.classList.add('carta');
             carta.setAttribute('data-valor', imagenes[i]);
+
+            
             carta.addEventListener('click', function () {
-                if (bloqueoTablero) {
+                if (bloqueoTablero || cartasAdivinadas.includes(this)) {
                     return;
                 }
                 if (this == primeraCarta) {
@@ -98,8 +99,8 @@
                     segundaCarta = this;
                     bloqueoTablero = true;
 
-
-                    if (primeraCarta.getAttribute('data-valor') == segundaCarta.getAttribute('data-valor')) {
+                    if (primeraCarta.getAttribute('data-valor') === segundaCarta.getAttribute('data-valor')) {
+                        cartasAdivinadas.push(primeraCarta, segundaCarta);
                         primeraCarta.removeEventListener('click', arguments.callee);
                         segundaCarta.removeEventListener('click', arguments.callee);
                         primeraCarta = null;
@@ -121,5 +122,4 @@
         }
     </script>
 </body>
-
 </html>
