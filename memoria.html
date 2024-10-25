@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,9 +43,10 @@
 </head>
 
 <body>
-    <h1>Juego de Memoria (Parejas)</h1>
+    <h1>Parejas Dragon Ball</h1>
     <div class="cartitas" id="cartitas"></div>
-
+    <p id="contador">Intentos: 0</p>
+    <p id="resultado" style="display: none;"></p>
     <script>
         let imagenes = [
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD9XaATFSAXyeimYjsrJVAZ5GO-qHGZ5w2HA&s',
@@ -62,7 +64,7 @@
             'https://www.mundodeportivo.com/alfabeta/hero/2021/02/freezer-dragon-ball-super.jpg?width=768&aspect_ratio=16:9&format=nowebp',
             'https://www.mundodeportivo.com/alfabeta/hero/2021/02/freezer-dragon-ball-super.jpg?width=768&aspect_ratio=16:9&format=nowebp',
             'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f3281f16-d1f9-4af5-9605-656b35bff153/df9rkgs-ca5c5b92-939f-4e70-9f43-bc09f5532a1f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YzMjgxZjE2LWQxZjktNGFmNS05NjA1LTY1NmIzNWJmZjE1M1wvZGY5cmtncy1jYTVjNWI5Mi05MzlmLTRlNzAtOWY0My1iYzA5ZjU1MzJhMWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.rVcUNA5hTjdtuMBp8d1rYw9XTcQtmRIt7sQMrvIEVjE',
-            'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f3281f16-d1f9-4af5-9605-656b35bff153/df9rkgs-ca5c5b92-939f-4e70-9f43-bc09f5532a1f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YzMjgxZjE2LWQxZjktNGFmNS05NjA1LTY1NmIzNWJmZjE1M1wvZGY5cmtncy1jYTVjNWI5Mi05MzlmLTRlNzAtOWY0My1iYzA5ZjU1MzJhMWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.rVcUNA5hTjdtuMBp8d1rYw9XTcQtmRIt7sQMrvIEVjE'
+            'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f3281f16-d1f9-4af5-9605-656b35bff153/df9rkgs-ca5c5b92-939f-4e70-9f43-bc09f5532a1f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2YzMjgxZjE2LWQxZjktNGFmNS05NjA1LTY1NmIzNWJmZjE1M1wvZGY5cmtncy1jYTVjNWI5Mi05MzlmLTRlNzAtOWY0My1iYzA5ZjU1MzJhMWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.rVcUNA5hTjdtuMBp8d1rYw9XTcQtmRIt7sQMrvIEVjE',
         ];
 
         let cartas = [];
@@ -70,6 +72,7 @@
         let segundaCarta = null;
         let bloqueoTablero = false;
         let cartasAdivinadas = [];
+        let intentos = 0;
 
         for (let i = imagenes.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
@@ -81,7 +84,7 @@
             carta.classList.add('carta');
             carta.setAttribute('data-valor', imagenes[i]);
 
-            
+
             carta.addEventListener('click', function () {
                 if (bloqueoTablero || cartasAdivinadas.includes(this)) {
                     return;
@@ -113,7 +116,15 @@
                             primeraCarta = null;
                             segundaCarta = null;
                             bloqueoTablero = false;
+
                         }, 750);
+                    }
+                    intentos = intentos + 1;
+                    document.getElementById('contador').innerText = `Intentos: ${intentos}`;
+
+                    if (cartasAdivinadas.length === imagenes.length) {
+                        document.getElementById('resultado').innerText = `Has ganado`;
+                        document.getElementById('resultado').style.display = 'block';
                     }
                 }
             });
@@ -122,4 +133,5 @@
         }
     </script>
 </body>
+
 </html>
